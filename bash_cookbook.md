@@ -244,3 +244,201 @@ done > myfile.txt
 echo "finished."
 
 The shell will create a file called myfile.txt and redirect the output of the for construct to that file.
+
+
+
+
+LESSON 4(function)
+
+functions can be declared in two ways:
+
+1)
+functionName {
+}
+
+2)
+functionName() {
+}
+
+
+working example in the program:
+#!/bin/bash
+function myfunc {
+echo "This is an example of using a function"
+}
+count=1
+while [ $count -le 3 ]
+do
+myfunc
+count=$(( $count + 1 ))
+done
+echo "This is the end of the loop"
+myfunc
+echo "End of the script"
+
+
+Here's a function called myfunc. To call a function, just specify its name.
+
+Please note that if you try to use the function before declaring it, you will encounter an error.
+Function names must be unique.
+
+
+COMMAND RETURN:
+
+The return command allows you to specify an integer exit code to return from a function.
+
+working example in the program:
+
+#!/bin/bash
+function myfunc {
+read -p "Enter a value: " value
+echo "adding value"
+return $(( $value + 10 ))
+}
+myfunc
+echo "The new value is $?"
+
+
+
+WRITING THE OUTPUT OF A FUNCTION TO A VARIABLE:
+
+Another way to return the results of a function's work is to write the data output by the function to a variable.
+This approach allows you to bypass the limitations of the return command and return any data from the function.
+
+working example in the program:
+#!/bin/bash
+function myfunc {
+read -p "Enter a value: " value
+echo $(( $value + 10 ))
+}
+result=$( myfunc)
+echo "The value is $result"
+
+
+
+ARGUMENT FUNCTIONS:
+
+Functions can use standard positional parameters that store what is passed to them when called. For example, the name of a function is stored in the $ 0 parameter, the first argument passed to it is in $1, the second in $2, and so on. The number of arguments passed to the function can be found by referring to the $# variable.
+
+Arguments are passed to the function by writing them after its name:
+myfunc $val1 10 20
+
+working example in the program:
+#!/bin/bash
+function addnum {
+if [ $# -eq 0 ] || [ $# -gt 2 ]
+then
+echo -1
+elif [ $# -eq 1 ]
+then
+echo $(( $1 + $1 ))
+else
+echo $(( $1 + $2 ))
+fi
+}
+echo -n "Adding 10 and 15: "
+value=$(addnum 10 15)
+echo $value
+echo -n "Adding one number: "
+value=$(addnum 10)
+echo $value
+echo -n "Adding no numbers: "
+value=$(addnum)
+echo $value
+echo -n "Adding three numbers: "
+value=$(addnum 10 15 20)
+echo $value
+
+The addnum function checks the number of arguments passed to it when called from a script. If there are none, or there are more than two, the function returns -1. If there is only one parameter, it adds it to itself and returns the result. If there are two parameters, the function adds them.
+
+Please note that the function cannot directly work with parameters that are passed to the script when it is run from the command line.
+
+Example:
+#!/bin/bash
+function myfunc {
+echo $(( $1 + $2 ))
+}
+if [ $# -eq 2 ]
+then
+value=$( myfunc)
+echo "The result is $value"
+else
+echo "Usage: myfunc  a b"
+fi
+
+When it is launched, or rather, when a function declared in it is called, an error message will be displayed.
+
+solution to the problem:
+#!/bin/bash
+function myfunc {
+echo $(( $1 + $2 ))
+}
+if [ $# -eq 2 ]
+then
+value=$(myfunc $1 $2)
+echo "The result is $value"
+else
+echo "Usage: myfunc a b"
+fi
+
+
+
+WORKING WITH VARIABLES IN FUNCTIONS:
+
+There are two kinds of variables:
+
+1)Global variables.
+
+2)Local variables.
+
+GLOBAL VARIABLES:
+Global variables are variables that are visible from anywhere in the bash script. If you have declared a global variable in the main script code, you can refer to such a variable from a function.
+
+So, variables declared outside of functions can be accessed from functions without problems:
+
+Working example in the program:
+#!/bin/bash
+function myfunc {
+value=$(( $value + 10 ))
+}
+read -p "Enter a value: " value
+myfunc
+echo "The new value is: $value"
+
+
+LOCAL VARIABLES:
+Variables that are declared and used inside a function can be declared local. To do this, use the local keyword in front of the variable name:
+
+local temp=$(( $value + 5 ))
+
+If there is a variable with the same name outside the function, it will not be affected. The local keyword allows you to separate the variables used inside the function from other variables.
+
+Working example in the program:
+#!/bin/bash
+function myfunc {
+local temp=$[ $value + 5 ]
+echo "The Temp from inside function is $temp"
+}
+temp=4
+myfunc
+echo "The temp from outside is $temp"
+
+
+
+
+PASSING ARRAYS TO FUNCTIONS AS ARGUMENTS:
+
+When passing an array function, it will only have access to its first element.
+
+In order to solve this problem, it is necessary to extract the data contained in it from the array and pass them to the function as independent arguments.
+
+Working example in program:
+#!/bin/bash
+function myfunc {
+local newarray
+newarray=("$@")
+echo "The new array value is: ${newarray[*]}"
+}
+myarray=(1 2 3 4 5)
+echo "The original array is ${myarray[*]}"
+myfunc ${myarray[*]}
