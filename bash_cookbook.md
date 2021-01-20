@@ -1,101 +1,89 @@
-Урок 1
-для начала всегда записывается шибанг
-#! /bin/bash
+# Lesson 1
+- To be able to execute script you need to write this at the top of script
+    ```sh
+     #!usr/bin/env bash
+    ```
+- After that you need to make your script executable for enviroment
+    ```sh
+    $ chmod +x path\to\script
+    ```
 
+There are 2 types of writting commands:
 
-# - это коментарий
+1. ```sh
+    pwd; ls; ... 
+   ```
+2. ```sh
+    pwd
+    ls
+    ....
+    ```
 
-chmod +x название скрипта - использовать данный скрипт
+to write something in output use this:
 
-команды записываются двумя способами
-1)
-pwd; ls; ...
-2)
-pwd
-ls
-....
+```sh
+echo "some string $variable"
+```
 
-что бы вывести что либо используется команда echo
-echo "то что нужно вывести $нужная_переменная"
+There are to 2 ways to save command output in variable:
+1. ```sh
+     variable_name=  `command`
+    ```
+2. ```sh 
+     variable_name= $(command)
+   ```
 
-для того что бы использовать команду по вызову переменной можно написать либо
-1)имя_переменной= `команда`
-2)имя_переменной= $(команда)
+There is a specific way to manipulate with arithmetic operators
+```sh
+ num1=2
+ num2=10
+ sum_var=(($num1 + $num2 ))
+```
 
-для того что бы использовать математические операции исползуется
+# Lesson 2
 
-число1=x 
-число2=н
-сумма=(($число1 + $число2 ))
-
-
-
-Урок 2
-
-конструкция if
-
-if условие [сравнение]
+## if construction
+```sh
+if [[ CONDITION ]]
 then
 ....
-elif условие
+elif [[ CONDITION ]]
 then
 ....
 else
 ....
 fi
+```
 
-КЛЮЧИ(для чисел)
-#-eq аналогичен знаку =
-#-gt аналогичен знаку >    
-#-ge аналогичен знаку >=
-#-lt аналогичен знаку <
-#-le аналогичен знаку <=
-#-ne аналогичен знаку !=
+## Condition Keys (for integers)
 
+```sh
+1. -eq is =
+2. -gt is >    
+3. -ge is >=
+4. -lt is <
+5. -le is <=
+6. -ne is !=
+```
 
-$0 - название скрипта
-$1 - первый переданный параметр в скрипт
-$2 - второй переданный параметр в скрипт
-$# - количество параметров переданных в скрипт
-${!#} - последний элемент переданный в скрипт
-$* - список всех параметров
-$@ - список всех параметров, но которые можно перебирать в циклах
-
-
-Ключи, передаются в командной строке как параметры
-используются в коде после ключевого слова case
-передаются как:
--название скрипта- -a -b -c
-
-case "$1" in
--a) ....
--b) ....
--c) ....
+## Enviromental variables
+```sh
+$0 - 'specific' path to script
+${integer} - {integer} var given to script
+$# - amount of vars given to script
+${!#} - last var in list of vars
+$* - not-iterable list of vars
+$@ - iterable list of vars
+```
 
 
-стандартные ключи:
 
--a Вывести все объекты.
--c Произвести подсчёт.
--d Указать директорию.
--e Развернуть объект.
--f Указать файл, из которого нужно прочитать данные.
--h Вывести справку по команде.
--i Игнорировать регистр символов.
--l Выполнить полноформатный вывод данных.
--n Использовать неинтерактивный (пакетный) режим.
--o Позволяет указать файл, в который нужно перенаправить вывод.
--q Выполнить скрипт в quiet-режиме.
--r Обрабатывать папки и файлы рекурсивно.
--s Выполнить скрипт в silent-режиме.
--v Выполнить многословный вывод.
--x Исключить объект.
--y Ответить «yes» на все вопросы.
+to read input from console use `read`
 
-
-для ввода данных с клавиатуры используется read
-
+### Example
+```sh
 #!/bin/bash
 echo -n "Enter your name: "
 read name
 echo "Hello $name, welcome to my program."
+```
